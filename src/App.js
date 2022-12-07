@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect } from "react";
+// import { getMessaging, ngetToken } from "firebase/messaging";
+import { messaging } from "./firebase";
+import { getToken } from "firebase/messaging";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  // const messaging = getMessaging();
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey:
+          "BE9vaK5ToVyP1i1zi811orfOE-RPtGKV4HsemON3LptvUAjUpNm8nzV4ZvZMTlq9HATR6oTUIi5Ip6IgsaklNlw",
+      });
+      console.log("token", token);
+    } else if (permission === "denied") {
+      alert("DEnied Permission");
+    }
+  }
+  useEffect(() => {
+    requestPermission();
+  }, []);
+  return <div className="App">Push notification with FIREBASE</div>;
 }
 
 export default App;
